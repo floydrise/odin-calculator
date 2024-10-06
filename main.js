@@ -47,6 +47,39 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         currentScreen.textContent = currentValue;
     })
+
+    //handle cases when keyboard, instead of on screen buttons, is used
+    document.addEventListener("keydown", (event) => {
+        const keyPressed = event.key;
+        console.log(keyPressed);
+        if (isFinite(keyPressed) || keyPressed === ".") {
+            currentValue += keyPressed;
+            currentScreen.textContent = currentValue;
+        }
+        if (keyPressed === "+" || keyPressed === "-" || keyPressed === "*" || keyPressed === "/") {
+            if (currentValue === "") return
+
+            previousValue = currentValue;
+            operator = keyPressed;
+            currentValue = "";
+            previousScreen.textContent = previousValue + " " + operator;
+            currentScreen.textContent = "";
+        }
+
+        if (keyPressed === "Enter" || keyPressed === "=") {
+            calculate();
+            previousScreen.textContent = "";
+            currentScreen.textContent = previousValue;
+        }
+
+        if (keyPressed === "c" || keyPressed === "C") {
+            previousScreen.textContent = "";
+            currentScreen.textContent = "";
+            previousValue = "";
+            currentValue = "";
+            operator = "";
+        }
+    })
 });
 
 function handleNumber(num) {
@@ -71,7 +104,7 @@ function calculate() {
         case "-":
             previousValue -= currentValue;
             break;
-        case "x":
+        case "*":
             previousValue *= currentValue;
             break;
         case "/":
